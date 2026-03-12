@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pitching Is a Game · Product Sprint 2026 Workshop</title>
+  <link rel="icon" type="image/x-icon" href="BitmojiWave.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -116,6 +117,11 @@
       transform: translateY(0);
       opacity: 1;
       filter: blur(0);
+      --aura-main: rgba(196, 181, 255, 0.16);
+      --aura-echo: rgba(168, 220, 255, 0.10);
+      --ambient-ring-stroke: rgba(255, 61, 138, 0.15);
+      --ambient-ring-shadow: rgba(255, 61, 138, 0.04);
+      --ambient-ribbon: rgba(255, 61, 138, 0.14);
     }
 
     .slide::before {
@@ -127,16 +133,91 @@
         linear-gradient(90deg, var(--grid-color, var(--blueprint)) 1px, transparent 1px);
       background-size: 40px 40px;
       z-index: 0;
+      animation: gridDrift 24s linear infinite alternate;
     }
 
     .slide::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle var(--aura-size, 360px) at var(--aura-x, 74%) var(--aura-y, 28%), rgba(196, 181, 255, 0.12), transparent 72%);
+      background:
+        radial-gradient(circle var(--aura-size, 380px) at var(--aura-x, 74%) var(--aura-y, 28%), var(--aura-main), transparent 72%),
+        radial-gradient(circle calc(var(--aura-size, 380px) * 0.58) at var(--aura-echo-x, 28%) var(--aura-echo-y, 68%), var(--aura-echo), transparent 74%);
       z-index: 0;
       pointer-events: none;
-      opacity: 0.9;
+      opacity: 0.95;
+      animation: auraPulse 16s ease-in-out infinite alternate;
+      transform-origin: var(--aura-x, 74%) var(--aura-y, 28%);
+    }
+
+    .ambient-motion {
+      position: absolute;
+      inset: -8%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0.96;
+    }
+
+    .ambient-motion::before,
+    .ambient-motion::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(76px);
+      transform: translate3d(0, 0, 0);
+    }
+
+    .ambient-motion::before {
+      width: var(--ambient-one-size, clamp(220px, 26vw, 420px));
+      height: var(--ambient-one-size, clamp(220px, 26vw, 420px));
+      left: var(--ambient-one-left, 8%);
+      top: var(--ambient-one-top, 14%);
+      background: radial-gradient(circle at 35% 35%, var(--ambient-1, rgba(196, 181, 255, 0.28)), transparent 70%);
+      opacity: 0.38;
+      animation: ambientFloat1 var(--ambient-one-duration, 26s) ease-in-out infinite alternate;
+    }
+
+    .ambient-motion::after {
+      width: var(--ambient-two-size, clamp(180px, 20vw, 320px));
+      height: var(--ambient-two-size, clamp(180px, 20vw, 320px));
+      right: var(--ambient-two-right, 8%);
+      bottom: var(--ambient-two-bottom, 10%);
+      background: radial-gradient(circle at 40% 40%, var(--ambient-2, rgba(168, 220, 255, 0.22)), transparent 72%);
+      opacity: 0.34;
+      animation: ambientFloat2 var(--ambient-two-duration, 34s) ease-in-out infinite alternate;
+    }
+
+    .ambient-ribbon {
+      position: absolute;
+      left: var(--ambient-ribbon-left, 16%);
+      top: var(--ambient-ribbon-top, 48%);
+      width: var(--ambient-ribbon-width, min(48vw, 640px));
+      height: var(--ambient-ribbon-height, 170px);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, transparent 0%, var(--ambient-ribbon) 22%, rgba(255, 255, 255, 0.08) 50%, transparent 82%);
+      filter: blur(24px);
+      opacity: 0.58;
+      transform: rotate(var(--ambient-ribbon-rotate, -12deg)) translate3d(0, 0, 0);
+      transform-origin: center;
+      animation: ambientRibbon var(--ambient-ribbon-duration, 24s) ease-in-out infinite alternate;
+    }
+
+    .ambient-ring {
+      position: absolute;
+      left: var(--ambient-ring-left, 66%);
+      top: var(--ambient-ring-top, 16%);
+      width: var(--ambient-ring-size, 220px);
+      height: var(--ambient-ring-size, 220px);
+      border-radius: 50%;
+      border: 1.5px solid var(--ambient-ring-stroke);
+      box-shadow:
+        0 0 0 20px var(--ambient-ring-shadow),
+        0 0 0 52px rgba(255, 255, 255, 0.03);
+      opacity: 0.72;
+      transform: translate3d(0, 0, 0);
+      animation: ambientRing var(--ambient-ring-duration, 22s) ease-in-out infinite alternate;
     }
 
     .slide.no-grid::before {
@@ -151,10 +232,11 @@
       --glass-bg: rgba(255, 255, 255, 0.08);
       --glass-border: rgba(255, 255, 255, 0.15);
       --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    }
-
-    .slide.dark::after {
-      background: radial-gradient(circle 420px at var(--aura-x, 74%) var(--aura-y, 28%), rgba(255, 61, 138, 0.16), transparent 74%);
+      --aura-main: rgba(255, 61, 138, 0.22);
+      --aura-echo: rgba(184, 169, 255, 0.14);
+      --ambient-ring-stroke: rgba(255, 61, 138, 0.24);
+      --ambient-ring-shadow: rgba(255, 61, 138, 0.06);
+      --ambient-ribbon: rgba(255, 61, 138, 0.22);
     }
 
     .slide.activity {
@@ -163,10 +245,11 @@
       --glass-bg: rgba(255, 210, 170, 0.30);
       --glass-border: rgba(255, 255, 255, 0.78);
       --card-shadow: 0 8px 40px rgba(255, 180, 110, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    }
-
-    .slide.activity::after {
-      background: radial-gradient(circle 400px at var(--aura-x, 74%) var(--aura-y, 30%), rgba(255, 180, 100, 0.16), transparent 72%);
+      --aura-main: rgba(255, 180, 100, 0.22);
+      --aura-echo: rgba(255, 184, 168, 0.14);
+      --ambient-ring-stroke: rgba(255, 180, 100, 0.26);
+      --ambient-ring-shadow: rgba(255, 180, 100, 0.06);
+      --ambient-ribbon: rgba(255, 180, 100, 0.22);
     }
 
     .slide.active,
@@ -544,6 +627,60 @@
       100% { transform: translate3d(14px, -16px, 0); }
     }
 
+    @keyframes gridDrift {
+      0% {
+        background-position: 0 0, 0 0;
+        opacity: 0.92;
+      }
+      100% {
+        background-position: 16px 14px, -12px 12px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes auraPulse {
+      0% {
+        opacity: 0.78;
+        transform: scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes ambientFloat1 {
+      0% { transform: translate3d(-22px, -14px, 0) scale(0.96); }
+      100% { transform: translate3d(28px, 24px, 0) scale(1.14); }
+    }
+
+    @keyframes ambientFloat2 {
+      0% { transform: translate3d(20px, -10px, 0) scale(0.94); }
+      100% { transform: translate3d(-26px, 22px, 0) scale(1.12); }
+    }
+
+    @keyframes ambientRibbon {
+      0% {
+        transform: rotate(var(--ambient-ribbon-rotate, -12deg)) translate3d(-18px, -12px, 0) scaleX(0.92);
+        opacity: 0.34;
+      }
+      100% {
+        transform: rotate(calc(var(--ambient-ribbon-rotate, -12deg) + 10deg)) translate3d(24px, 18px, 0) scaleX(1.1);
+        opacity: 0.66;
+      }
+    }
+
+    @keyframes ambientRing {
+      0% {
+        transform: translate3d(0, 0, 0) scale(0.94) rotate(0deg);
+        opacity: 0.34;
+      }
+      100% {
+        transform: translate3d(-30px, 26px, 0) scale(1.12) rotate(16deg);
+        opacity: 0.62;
+      }
+    }
+
     @keyframes warmPulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(255, 180, 100, 0.3); }
       50% { box-shadow: 0 0 0 12px rgba(255, 180, 100, 0); }
@@ -664,6 +801,19 @@
     .dark .avatar-card {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.05));
       border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide::before,
+      .slide::after,
+      .ambient-motion::before,
+      .ambient-motion::after,
+      .ambient-ribbon,
+      .ambient-ring,
+      .orb {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
     }
 
     .avatar-card svg,
@@ -1015,6 +1165,111 @@
       align-items: center;
     }
 
+    .example-transition {
+      display: grid;
+      gap: 8px;
+      max-width: 760px;
+      padding: 18px 22px;
+      background: rgba(255, 61, 138, 0.08);
+      border-color: rgba(255, 61, 138, 0.2);
+    }
+
+    section[data-title="Deliverable to Pitch Component"] .slide-content {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .mapping-stage {
+      display: grid;
+      gap: 26px;
+      align-content: center;
+      width: 100%;
+    }
+
+    .mapping-stage-header {
+      display: grid;
+      gap: 12px;
+      max-width: 760px;
+    }
+
+    .mapping-grid-horizontal {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .mapping-lane {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      min-height: 250px;
+      align-content: start;
+    }
+
+    .mapping-route {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .mapping-node {
+      display: grid;
+      gap: 8px;
+      min-height: 128px;
+      padding: 16px 16px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+      align-content: start;
+    }
+
+    .mapping-node.target {
+      background: rgba(255, 61, 138, 0.08);
+      border-color: rgba(255, 61, 138, 0.16);
+    }
+
+    .mapping-node strong {
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .mapping-node .body-sm {
+      margin: 0;
+    }
+
+    .mapping-node-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(20, 19, 33, 0.52);
+    }
+
+    .mapping-lane-arrow {
+      position: relative;
+      width: 54px;
+      height: 2px;
+      background: var(--pink);
+      box-shadow: 0 0 0 6px rgba(255, 61, 138, 0.1);
+      border-radius: 999px;
+      justify-self: center;
+    }
+
+    .mapping-lane-arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -4px;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--pink);
+      border-right: 2px solid var(--pink);
+      transform: rotate(45deg);
+    }
+
     .mapping-list {
       display: grid;
       gap: 14px;
@@ -1277,9 +1532,11 @@
     }
 
     #mapOverlay {
-      justify-content: flex-start;
+      justify-content: flex-end;
       padding: 0;
-      background: rgba(7, 6, 18, 0.32);
+      background: rgba(7, 6, 18, 0.08);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     #mapOverlay .map-shell {
@@ -1287,13 +1544,11 @@
       height: 100%;
       gap: 18px;
       padding: 24px 20px 20px;
-      background: rgba(14, 12, 26, 0.92);
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 26px 0 64px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(26px);
-      -webkit-backdrop-filter: blur(26px);
-      border-radius: 0 28px 28px 0;
-      transform: translateX(-102%);
+      background: rgba(14, 12, 26, 0.96);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: -26px 0 64px rgba(0, 0, 0, 0.24);
+      border-radius: 28px 0 0 28px;
+      transform: translateX(102%);
       transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
@@ -1541,6 +1796,21 @@
       color: rgba(255, 255, 255, 0.48);
     }
 
+    section[data-title="Who Is This Guy?"] .slide-content {
+      grid-template-columns: minmax(360px, 1.15fr) minmax(0, 0.95fr);
+      align-items: center;
+    }
+
+    section[data-title="Who Is This Guy?"] .avatar-card {
+      width: min(100%, 460px);
+      padding: 34px;
+      justify-self: start;
+    }
+
+    section[data-title="Who Is This Guy?"] .avatar-card img {
+      width: min(100%, 380px);
+    }
+
     .checkmark {
       color: var(--pink);
       font-size: 1.18rem;
@@ -1598,6 +1868,52 @@
       min-height: 420px;
       background: rgba(255, 255, 255, 0.82);
       border-color: rgba(255, 255, 255, 0.92);
+    }
+
+    section[data-title="The Game Has Two Players"] .slide-content {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      align-items: center;
+    }
+
+    section[data-title="The Game Has Two Players"] .diagram-shell {
+      padding: 8px 20px 18px;
+    }
+
+    section[data-title="The Game Has Two Players"] .two-player-canvas {
+      min-height: 372px;
+      padding: 0;
+    }
+
+    section[data-title="The Game Has Two Players"] .player-track {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: clamp(10px, 1.6vw, 18px);
+    }
+
+    section[data-title="The Game Has Two Players"] .player-node {
+      min-width: 0;
+    }
+
+    section[data-title="The Game Has Two Players"] .player-avatar {
+      width: clamp(150px, 15vw, 188px);
+      height: clamp(150px, 15vw, 188px);
+    }
+
+    section[data-title="The Game Has Two Players"] .player-avatar img {
+      width: 72%;
+      height: 72%;
+      object-position: center center;
+    }
+
+    section[data-title="The Game Has Two Players"] .pitch-arrow-wrap {
+      gap: 12px;
+    }
+
+    section[data-title="The Game Has Two Players"] .pitch-line {
+      width: clamp(82px, 8vw, 118px);
+    }
+
+    section[data-title="The Game Has Two Players"] .player-label {
+      font-size: clamp(1.22rem, 1.9vw, 1.55rem);
     }
 
     section[data-title="Recommended Pitch Structure"] .slide-content {
@@ -1697,6 +2013,22 @@
         grid-template-columns: 1fr;
       }
 
+      .mapping-grid-horizontal {
+        grid-template-columns: 1fr;
+      }
+
+      .mapping-route {
+        grid-template-columns: 1fr;
+      }
+
+      .mapping-lane {
+        min-height: unset;
+      }
+
+      .mapping-lane-arrow {
+        width: calc(100% - 24px);
+      }
+
       .mapping-bridge {
         min-height: 88px;
       }
@@ -1732,6 +2064,25 @@
       .slide {
         padding: 18px 16px 24px;
         overflow-y: auto;
+      }
+
+      .ambient-motion {
+        inset: -14%;
+      }
+
+      .ambient-motion::before,
+      .ambient-motion::after {
+        filter: blur(72px);
+      }
+
+      .ambient-ribbon {
+        opacity: 0.42;
+        width: min(72vw, 420px);
+        height: 132px;
+      }
+
+      .ambient-ring {
+        opacity: 0.44;
       }
 
       .slide-content {
@@ -1969,22 +2320,23 @@
         <div class="slide-content">
           <div class="stagger-item">
             <div class="avatar-card avatar-bob">
-              <img src="BitmojiRaisedHand.png" alt="Fahim bitmoji portrait" class="bitmoji-photo">
+              <img src="BitmojiWave.png" alt="Fahim bitmoji portrait" class="bitmoji-photo">
             </div>
           </div>
           <div class="stagger-item" style="display:grid;gap:24px">
-            <p class="kicker">Meet Your Host</p>
+            <p class="kicker">Who Is This Guy?</p>
             <div class="glass" style="display:grid;gap:20px">
               <div>
                 <h2 class="headline-lg" style="margin-bottom:12px">Fahim</h2>
-                <p class="body-md" style="margin:0">I've been pitched to. I've pitched to CVPs. I've <span class="underline-pink">failed</span>. Here's what I learned.</p>
+                <p class="body-md" style="margin:0">I've been pitched to. I've pitched to CVPs. I've <span class="underline-pink">failed</span>. And I'll be one of the Product Sprint Judges</p>
               </div>
               <ul class="role-pills">
-                <li class="role-pill"><span class="badge-dot" style="background:#B86BFF"></span><span><strong>APM Intern</strong> · Salesforce</span></li>
-                <li class="role-pill"><span class="badge-dot" style="background:#4DA7FF"></span><span><strong>Technical PM Intern</strong> · Microsoft</span></li>
-                <li class="role-pill"><span class="badge-dot" style="background:#42D39C"></span><span><strong>Business PM Intern</strong> · Microsoft</span></li>
-                <li class="role-pill"><span class="badge-dot" style="background:#F2C53D"></span><span><strong>PM Intern</strong> · Ooma</span></li>
-                <li class="role-pill"><span class="badge-dot" style="background:#FF5A5F"></span><span><strong>Product Ops Intern</strong> · Super.com</span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#B86BFF"></span><span><strong>APM Intern</strong> · Salesforce (San Francisco) </span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#FF5A5F"></span><span><strong>Product Ops Intern</strong> · Super.com (Lisbon) </span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#4DA7FF"></span><span><strong>Technical PM Intern</strong> · Microsoft (Seattle/Vancouver) </span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#42D39C"></span><span><strong>Business PM Intern</strong> · Microsoft (Toronto/Vancouver) </span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#F2C53D"></span><span><strong>PM Intern</strong> · Ooma (Sunnyvale/Vancouver) </span></li>
+                <li class="role-pill"><span class="badge-dot" style="background:#FF3D8A"></span><span><strong>President</strong> · Product Management Club (2023–2024)</span></li>
               </ul>
             </div>
           </div>
@@ -2010,7 +2362,7 @@
             <div class="activity-timer-row stagger-item" style="width:100%;justify-content:center">
               <button class="timer-pill" data-timer-seconds="120" data-timer-label="2 minutes">⏱ 2 minutes — talk to someone near you</button>
               <div class="avatar-card avatar-mini avatar-wave" style="width:112px">
-                <img src="BitmojiWave.png" alt="Fahim waving" class="bitmoji-photo">
+                <img src="BitmojiRaisedHand.png" alt="Fahim waving" class="bitmoji-photo">
               </div>
             </div>
           </div>
@@ -2064,7 +2416,7 @@
                 <div class="player-track">
                   <div class="player-node">
                     <div class="player-avatar">
-                      <img src="BitmojiOther.png" alt="Fahim bitmoji" class="bitmoji-photo">
+                      <img src="BitmojiKoreanHeart.png" alt="Fahim bitmoji" class="bitmoji-photo">
                     </div>
                     <div class="player-label">YOU</div>
                   </div>
@@ -2081,7 +2433,6 @@
                   </div>
                 </div>
               </div>
-              <div class="diagram-caption">reaction engineering</div>
             </div>
           </div>
           <div class="stagger-item" style="display:grid;gap:22px">
@@ -2122,31 +2473,31 @@
           <div class="center-stack wide-center">
             <div class="emoji-xl stagger-item">🔄</div>
             <div class="stagger-item">
-              <h2 class="headline-xl" style="margin-bottom:12px">You are the judge now.</h2>
-              <p class="body-lg">You've just listened to 12 teams. It's 9 PM. You're tired. Team 13 walks up. What makes you lean forward - vs tune out?</p>
+              <h2 class="headline-xl" style="margin-bottom:12px">Judge Huddle: what loses you, what wins you?</h2>
+              <p class="body-lg">With your table, build the list yourselves. Imagine it's 9 PM, you've heard 12 teams already, and Team 13 is walking up now.</p>
             </div>
             <div class="cards-2 wide-center">
               <div class="glass activity-card stagger-item" style="background:rgba(255,96,96,0.14)">
-                <h3 class="card-title">Tune Out</h3>
+                <h3 class="card-title">What makes you tune out?</h3>
                 <ul class="list-tight">
-                  <li>Starts with "So, um, our product is..."</li>
-                  <li>Recaps all their research for 3 minutes</li>
-                  <li>Reads off the slides</li>
+                  <li>What first sentence immediately lowers your confidence?</li>
+                  <li>What behaviour makes you think: they didn't rehearse?</li>
+                  <li>What kind of slide or explanation loses the room fast?</li>
                 </ul>
               </div>
               <div class="glass activity-card stagger-item" style="background:rgba(112,224,170,0.16)">
-                <h3 class="card-title">Lean Forward</h3>
+                <h3 class="card-title">What makes you lean forward?</h3>
                 <ul class="list-tight">
-                  <li>Opens with a crisp insight or surprising stat</li>
-                  <li>Shows me the thing fast</li>
-                  <li>Speaks like they own it</li>
+                  <li>What opener earns your attention in the first 15 seconds?</li>
+                  <li>What proof point makes you trust a team quickly?</li>
+                  <li>What makes you think: I want to hear the rest of this?</li>
                 </ul>
               </div>
             </div>
-            <button class="timer-pill stagger-item" data-timer-seconds="90" data-timer-label="90 seconds">⏱ 90 seconds — add to the list with your table</button>
+            <button class="timer-pill stagger-item" data-timer-seconds="90" data-timer-label="2 minutes">⏱ 90 seconds — come back with 1 tune-out and 1 lean-forward move</button>
           </div>
         </div>
-        <aside class="speaker-note">I want you to literally think like a judge right now. You don't have to agree with me - generate your own list. What kills it, what lands it? When we come back, I'll share the three that come up literally every single time I've seen this exercise run.</aside>
+        <aside class="speaker-note">I want actual table talk here, not silent nodding. Build your own list. What loses you fast, and what earns your attention fast? When we come back, I want one tune-out trigger and one lean-forward move from a few tables, and then I'll show you the patterns that come up every time.</aside>
       </section>
 
       <section class="slide layout-stack" data-title="The Three Killers">
@@ -2213,6 +2564,10 @@
             <h2 class="headline-lg" style="margin:8px 0 0">PACLCOD Overview</h2>
             <p class="body-md" style="margin-top:14px">We're going to go fast. This is meant to be a map, not a lecture.</p>
           </div>
+          <div class="glass example-transition stagger-item">
+            <p class="mono-caption">Running example</p>
+            <p class="body-md" style="margin:0"><strong>To make this concrete, I'll use <span class="accent">eventCRAFT</span></strong> - a concept from my Google APM final-round take-home.</p>
+          </div>
           <div class="flow-row">
             <div class="flow-card stagger-item"><div class="step-number">1</div><strong>P · Problem</strong><span class="body-sm">What hurts?</span></div>
             <div class="flow-card stagger-item"><div class="step-number">2</div><strong>A · Audience</strong><span class="body-sm">Who feels it?</span></div>
@@ -2223,7 +2578,7 @@
             <div class="flow-card stagger-item"><div class="step-number">7</div><strong>D · Decision</strong><span class="body-sm">What should happen next?</span></div>
           </div>
         </div>
-        <aside class="speaker-note">PACLCOD. You don't need to memorise it tonight, but I want you to understand the logic. Each element answers a question that's implicitly running in your judges' heads. Skip one and you'll feel the gap. Let me walk through it in 5 minutes.</aside>
+        <aside class="speaker-note">PACLCOD. You don't need to memorise it tonight, but I want you to understand the logic. Each element answers a question that's implicitly running in your judges' heads. Skip one and you'll feel the gap. To make this concrete, I'm going to use eventCRAFT - a concept from my Google APM final-round take-home. Let me walk through it in 5 minutes.</aside>
       </section>
 
       <section class="slide layout-pac-left" data-title="P: Problem">
@@ -2300,9 +2655,9 @@
               <text x="233" y="229" text-anchor="middle" fill="#141321" font-size="22" font-weight="700" font-family="Plus Jakarta Sans">Spotify</text>
               <rect x="322" y="176" width="152" height="60" rx="20" fill="rgba(255,181,160,0.22)" stroke="rgba(255,181,160,0.92)" stroke-width="2.4"/>
               <text x="398" y="211" text-anchor="middle" fill="#141321" font-size="22" font-weight="700" font-family="Plus Jakarta Sans">Festival App</text>
-              <rect x="452" y="92" width="168" height="76" rx="24" fill="rgba(255,61,138,0.16)" stroke="#FF3D8A" stroke-width="3"/>
-              <text x="536" y="126" text-anchor="middle" fill="#FF3D8A" font-size="24" font-weight="800" font-family="Plus Jakarta Sans">eventCRAFT</text>
-              <text x="536" y="150" text-anchor="middle" fill="#48425B" font-size="16" font-family="DM Mono">personal + live + social</text>
+              <rect x="408" y="90" width="208" height="84" rx="26" fill="rgba(255,61,138,0.16)" stroke="#FF3D8A" stroke-width="3"/>
+              <text x="512" y="126" text-anchor="middle" fill="#FF3D8A" font-size="23" font-weight="800" font-family="Plus Jakarta Sans">eventCRAFT</text>
+              <text x="512" y="152" text-anchor="middle" fill="#48425B" font-size="15" font-family="DM Mono">personal, social, live</text>
             </svg>
           </div>
         </div>
@@ -2421,25 +2776,58 @@
       <section class="slide layout-mapping" data-title="Deliverable to Pitch Component">
         <div class="orb" style="--size:360px;--blur:102px;--opacity:0.13;--duration:32s;--float-name:floatB;--tone:rgba(168,240,216,0.82);top:-80px;left:-30px;"></div>
         <div class="slide-content">
-          <div class="stagger-item" style="display:grid;gap:14px">
-            <p class="kicker">Resource Map</p>
-            <h2 class="headline-lg">Deliverable → Pitch Component</h2>
-            <div class="mapping-columns">
-              <div class="mapping-list">
-                <div class="glass"><strong>📋 User Insights One-Pager</strong><p class="body-sm" style="margin:8px 0 0">Your clearest source of pain, person, and behaviour.</p></div>
-                <div class="glass"><strong>📄 PRD</strong><p class="body-sm" style="margin:8px 0 0">Your product claim, scope, and logic.</p></div>
-                <div class="glass"><strong>💻 Prototype / Demo</strong><p class="body-sm" style="margin:8px 0 0">Your proof that this thing can be experienced.</p></div>
-              </div>
-              <div class="mapping-bridge" aria-hidden="true">
-                <div class="mapping-arrow a1"></div>
-                <div class="mapping-arrow a2"></div>
-                <div class="mapping-arrow a3"></div>
-              </div>
-              <div class="mapping-list">
-                <div class="glass" style="background:rgba(255,61,138,0.08)"><strong>→ Problem + Audience + Context (P, A, C)</strong><p class="body-sm" style="margin:8px 0 0">Use it to prove the pain is real and specific.</p></div>
-                <div class="glass" style="background:rgba(255,61,138,0.08)"><strong>→ Claim + Options / Evidence (C, O)</strong><p class="body-sm" style="margin:8px 0 0">Turn requirements into a crisp product thesis.</p></div>
-                <div class="glass" style="background:rgba(255,61,138,0.08)"><strong>→ Lead + Decision (L, D) + demo moment</strong><p class="body-sm" style="margin:8px 0 0">Sequence the story around the strongest visual proof.</p></div>
-              </div>
+          <div class="mapping-stage stagger-item">
+            <div class="mapping-stage-header">
+              <p class="kicker">Resource Map</p>
+              <h2 class="headline-lg">Deliverable → Pitch Component</h2>
+              <p class="body-md">Everything you've already built has a job in the room. The pitch is just deciding what each artifact needs to prove.</p>
+            </div>
+            <div class="mapping-grid-horizontal">
+              <article class="glass mapping-lane">
+                <div class="mapping-route">
+                  <div class="mapping-node">
+                    <span class="mapping-node-label">Deliverable</span>
+                    <strong>📋 User Insights One-Pager</strong>
+                    <p class="body-sm">Pain, person, and behaviour.</p>
+                  </div>
+                  <div class="mapping-lane-arrow" aria-hidden="true"></div>
+                  <div class="mapping-node target">
+                    <span class="mapping-node-label">Pitch job</span>
+                    <strong>Problem + Audience + Context</strong>
+                    <p class="body-sm">Prove the pain is real and specific.</p>
+                  </div>
+                </div>
+              </article>
+              <article class="glass mapping-lane">
+                <div class="mapping-route">
+                  <div class="mapping-node">
+                    <span class="mapping-node-label">Deliverable</span>
+                    <strong>📄 PRD</strong>
+                    <p class="body-sm">Claim, scope, and product logic.</p>
+                  </div>
+                  <div class="mapping-lane-arrow" aria-hidden="true"></div>
+                  <div class="mapping-node target">
+                    <span class="mapping-node-label">Pitch job</span>
+                    <strong>Claim + Options / Evidence</strong>
+                    <p class="body-sm">Turn requirements into a sharp thesis.</p>
+                  </div>
+                </div>
+              </article>
+              <article class="glass mapping-lane">
+                <div class="mapping-route">
+                  <div class="mapping-node">
+                    <span class="mapping-node-label">Deliverable</span>
+                    <strong>💻 Prototype / Demo</strong>
+                    <p class="body-sm">Proof the product can be experienced.</p>
+                  </div>
+                  <div class="mapping-lane-arrow" aria-hidden="true"></div>
+                  <div class="mapping-node target">
+                    <span class="mapping-node-label">Pitch job</span>
+                    <strong>Lead + Decision + Demo moment</strong>
+                    <p class="body-sm">Sequence the story around the strongest visual proof.</p>
+                  </div>
+                </div>
+              </article>
             </div>
           </div>
         </div>
@@ -2821,7 +3209,7 @@
       let touchStartX = 0;
       let touchStartY = 0;
       let introTimeout = null;
-      const aura = { x: 74, y: 28, manualUntil: 0 };
+      const aura = { x: 74, y: 28, echoX: 28, echoY: 68, size: 380, manualUntil: 0 };
 
       function animateSlideItems(slide) {
         const items = slide.querySelectorAll(".stagger-item");
@@ -2848,6 +3236,68 @@
         introTimeout = setTimeout(() => {
           slide.classList.add("intro-played");
         }, 80);
+      }
+
+      function initAmbientMotion() {
+        const palettes = {
+          light: [
+            ["rgba(196, 181, 255, 0.30)", "rgba(168, 220, 255, 0.24)"],
+            ["rgba(255, 184, 168, 0.28)", "rgba(168, 240, 216, 0.22)"],
+            ["rgba(255, 224, 168, 0.24)", "rgba(196, 181, 255, 0.28)"]
+          ],
+          dark: [
+            ["rgba(255, 61, 138, 0.24)", "rgba(184, 169, 255, 0.18)"],
+            ["rgba(168, 220, 255, 0.15)", "rgba(255, 61, 138, 0.20)"],
+            ["rgba(255, 184, 168, 0.14)", "rgba(255, 61, 138, 0.22)"]
+          ],
+          activity: [
+            ["rgba(255, 224, 168, 0.34)", "rgba(255, 184, 168, 0.26)"],
+            ["rgba(255, 184, 168, 0.30)", "rgba(168, 240, 216, 0.22)"]
+          ]
+        };
+
+        slides.forEach(function (slide, index) {
+          if (slide.querySelector(".ambient-motion")) return;
+          const motion = document.createElement("div");
+          motion.className = "ambient-motion";
+          motion.setAttribute("aria-hidden", "true");
+
+          const ring = document.createElement("div");
+          ring.className = "ambient-ring";
+          motion.appendChild(ring);
+
+          const ribbon = document.createElement("div");
+          ribbon.className = "ambient-ribbon";
+          motion.appendChild(ribbon);
+
+          const paletteKey = slide.classList.contains("activity")
+            ? "activity"
+            : (slide.classList.contains("dark") ? "dark" : "light");
+          const palette = palettes[paletteKey][index % palettes[paletteKey].length];
+
+          motion.style.setProperty("--ambient-1", palette[0]);
+          motion.style.setProperty("--ambient-2", palette[1]);
+          motion.style.setProperty("--ambient-one-left", (4 + (index * 11) % 26) + "%");
+          motion.style.setProperty("--ambient-one-top", (8 + (index * 7) % 30) + "%");
+          motion.style.setProperty("--ambient-two-right", (4 + (index * 9) % 22) + "%");
+          motion.style.setProperty("--ambient-two-bottom", (4 + (index * 6) % 22) + "%");
+          motion.style.setProperty("--ambient-ring-left", (54 + (index * 5) % 22) + "%");
+          motion.style.setProperty("--ambient-ring-top", (10 + (index * 9) % 24) + "%");
+          motion.style.setProperty("--ambient-one-size", (220 + (index % 4) * 42) + "px");
+          motion.style.setProperty("--ambient-two-size", (180 + (index % 5) * 28) + "px");
+          motion.style.setProperty("--ambient-ring-size", (150 + (index % 5) * 34) + "px");
+          motion.style.setProperty("--ambient-ribbon-left", (6 + (index * 8) % 28) + "%");
+          motion.style.setProperty("--ambient-ribbon-top", (26 + (index * 11) % 34) + "%");
+          motion.style.setProperty("--ambient-ribbon-width", (420 + (index % 4) * 74) + "px");
+          motion.style.setProperty("--ambient-ribbon-height", (120 + (index % 3) * 18) + "px");
+          motion.style.setProperty("--ambient-ribbon-rotate", ((index % 2 === 0 ? -14 : 10) + (index % 3) * 2) + "deg");
+          motion.style.setProperty("--ambient-one-duration", (24 + (index % 4) * 3) + "s");
+          motion.style.setProperty("--ambient-two-duration", (30 + (index % 5) * 2) + "s");
+          motion.style.setProperty("--ambient-ring-duration", (20 + (index % 4) * 3) + "s");
+          motion.style.setProperty("--ambient-ribbon-duration", (18 + (index % 4) * 3) + "s");
+
+          slide.insertBefore(motion, slide.firstChild);
+        });
       }
 
       function updateChrome() {
@@ -3169,16 +3619,19 @@
       playIntro();
 
       function initAmbientAura() {
-        function setAuraPosition(x, y) {
+        function setAuraState(x, y, echoX, echoY, size) {
           presentation.style.setProperty("--aura-x", x + "%");
           presentation.style.setProperty("--aura-y", y + "%");
+          presentation.style.setProperty("--aura-echo-x", echoX + "%");
+          presentation.style.setProperty("--aura-echo-y", echoY + "%");
+          presentation.style.setProperty("--aura-size", size + "px");
         }
 
         window.addEventListener("mousemove", function (event) {
           aura.x = (event.clientX / window.innerWidth) * 100;
           aura.y = (event.clientY / window.innerHeight) * 100;
           aura.manualUntil = performance.now() + 1800;
-          setAuraPosition(aura.x, aura.y);
+          setAuraState(aura.x, aura.y, aura.echoX, aura.echoY, aura.size);
         });
 
         window.addEventListener("touchmove", function (event) {
@@ -3186,19 +3639,22 @@
           aura.x = (event.touches[0].clientX / window.innerWidth) * 100;
           aura.y = (event.touches[0].clientY / window.innerHeight) * 100;
           aura.manualUntil = performance.now() + 1200;
-          setAuraPosition(aura.x, aura.y);
+          setAuraState(aura.x, aura.y, aura.echoX, aura.echoY, aura.size);
         }, { passive: true });
 
         function tick(time) {
           if (time > aura.manualUntil) {
-            const autoX = 62 + Math.sin(time * 0.00023) * 18;
-            const autoY = 34 + Math.cos(time * 0.00017) * 14;
-            setAuraPosition(autoX, autoY);
+            aura.x = 60 + Math.sin(time * 0.00022) * 20;
+            aura.y = 34 + Math.cos(time * 0.00018) * 15;
           }
+          aura.echoX = 34 + Math.cos(time * 0.00016 + 1.4) * 17;
+          aura.echoY = 68 + Math.sin(time * 0.00020 + 0.7) * 13;
+          aura.size = (window.innerWidth < 780 ? 300 : 392) + Math.sin(time * 0.00026) * 64;
+          setAuraState(aura.x, aura.y, aura.echoX, aura.echoY, aura.size);
           requestAnimationFrame(tick);
         }
 
-        setAuraPosition(aura.x, aura.y);
+        setAuraState(aura.x, aura.y, aura.echoX, aura.echoY, aura.size);
         requestAnimationFrame(tick);
       }
 
@@ -3450,6 +3906,7 @@
         requestAnimationFrame(tick);
       }
 
+      initAmbientMotion();
       initAmbientAura();
       initPenParticles();
       initGameWireframe();
